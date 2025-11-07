@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konversi Angka & Hitung LN</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    #result, #lnResult {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    button.copy {
+      margin-top: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button.copy:hover {
+      background-color: #45a049;
+    }
+    hr {
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>Konversi Angka ke Ratusan / Jutaan / Miliaran / Triliunan</h2>
+  
+  <div>
+    <input oninput="convert()" type="text" id="numberInput" placeholder="Masukkan angka, contoh: 1,498.40 atau (410.23)" />
+    <br />
+    <select id="unitSelect">
+      <option value="satuan">Satuan</option>
+      <option value="ratusan">Ratusan</option>
+      <option value="jutaan">Jutaan</option>
+      <option value="miliaran" selected>Miliaran</option>
+      <option value="triliunan">Triliunan</option>
+    </select>
+    <br />
+    <button onclick="convert()">Konversi</button>
+  </div>
+
+  <div id="result"></div>
+  <button class="copy" id="copyBtn" style="display:none;" onclick="copyResult()">Copy</button>
+
+  <hr />
+
+  <h2>Hitung Logaritma Natural (ln)</h2>
+
+  <div>
+    <input oninput="calculateLn()" type="text" id="lnInput" placeholder="Masukkan angka positif, contoh: 10 atau 2.71828" />
+    <br />
+    <button onclick="calculateLn()">Hitung ln</button>
+  </div>
+
+  <div id="lnResult"></div>
+  <button class="copy" id="copyLnBtn" style="display:none;" onclick="copyLnResult()">Copy</button>
+
+  <script>
+    async function convert() {
+      const value = document.getElementById("numberInput").value;
+      const unit = document.getElementById("unitSelect").value;
+
+      if (!value) return
+    //   alert("Masukkan angka terlebih dahulu!");
+
+      try {
+        const res = await fetch("/convert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value, unit }),
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("result").textContent = data.error;
+          document.getElementById("copyBtn").style.display = "none";
+        } else {
+          document.getElementById("result").textContent = data.result.toLocaleString("id-ID");
+          document.getElementById("copyBtn").style.display = "inline-block";
+        }
+      } catch (err) {
+        document.getElementById("result").textContent = "Terjadi kesalahan server.";
+      }
+    }
+
+    function copyResult() {
+      const text = document.getElementById("result").textContent.replace(/\./g, "").replace(/,/g, "");
+      navigator.clipboard.writeText(text);
+    //   alert("Hasil telah disalin: " + text);
+    }
+
+    async function calculateLn() {
+      const value = document.getElementById("lnInput").value;
+      if (!value) return
+    //   alert("Masukkan angka terlebih dahulu!");
+
+      try {
+        const res = await fetch("/ln", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ value }),
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("lnResult").textContent = data.error;
+          document.getElementById("copyLnBtn").style.display = "none";
+        } else {
+          document.getElementById("lnResult").textContent = data.result;
+          document.getElementById("copyLnBtn").style.display = "inline-block";
+        }
+      } catch (err) {
+        document.getElementById("lnResult").textContent = "Terjadi kesalahan server.";
+      }
+    }
+
+    function copyLnResult() {
+      const text = document.getElementById("lnResult").textContent;
+      navigator.clipboard.writeText(text);
+    //   alert("Hasil ln telah disalin: " + text);
+    }
+  </script>
+</body>
+</html>
