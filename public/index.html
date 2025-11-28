@@ -114,7 +114,7 @@
       }
 
       async function convert() {
-        const value = document.getElementById("numberInput").value;
+        let value = document.getElementById("numberInput").value;
         const unit = document.getElementById("unitSelect").value;
 
         if (!value) {
@@ -124,6 +124,7 @@
         }
         // hilangkan titik di value
         value = value.replace(/\./g, "");
+        document.getElementById("numberInput").value = value;
         //   alert("Masukkan angka terlebih dahulu!");
 
         try {
