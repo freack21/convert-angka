@@ -122,6 +122,9 @@
           document.getElementById("copyBtn").style.display = "none";
           return;
         }
+        // hilangkan titik di value
+        value = value.replace(/\./g, "");
+        document.getElementById("numberInput").value = value;
         //   alert("Masukkan angka terlebih dahulu!");
 
         try {
