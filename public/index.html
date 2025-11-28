@@ -99,7 +99,12 @@
     <script>
       // Fungsi bantu: bersihkan angka dari simbol
       function cleanNumber(str) {
-        let numStr = str.toString().replace(/[\$,]/g, "").trim();
+        // ganti ` sebagai koma
+        let numStr = str
+          .toString()
+          .replace(/[\$,]/g, "")
+          .trim()
+          .replace(/`/g, ".");
 
         // Jika dalam tanda kurung, berarti negatif
         let isNegative = false;
@@ -122,8 +127,8 @@
           document.getElementById("copyBtn").style.display = "none";
           return;
         }
-        // hilangkan titik di value
-        value = value.replace(/\./g, "");
+        // hilangkan titik dan koma di value
+        value = value.replace(/[\.,]/g, "");
         document.getElementById("numberInput").value = value;
         //   alert("Masukkan angka terlebih dahulu!");
 
