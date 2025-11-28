@@ -51,7 +51,9 @@ app.post("/ln", (req, res) => {
 
   let num = cleanNumber(value);
   if (isNaN(num) || num <= 0) {
-    return res.status(400).json({ error: "Angka harus lebih besar dari 0 untuk menghitung ln." });
+    return res
+      .status(400)
+      .json({ error: "Angka harus lebih besar dari 0 untuk menghitung ln." });
   }
 
   const result = Math.log(num);
@@ -59,4 +61,6 @@ app.post("/ln", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server berjalan di http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server berjalan di http://localhost:${PORT}`)
+);
